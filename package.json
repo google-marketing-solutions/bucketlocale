@@ -1,0 +1,44 @@
+{
+  "name": "bucketlocale",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "format": "prettier --write src/",
+    "deploy-dev": "npm run build && firebase deploy --only hosting:bucketlocale-dev",
+    "deploy-prod": "cross-env VITE_GOOGLE_CLIENT_ID='' npm run build && firebase deploy --only hosting:bucketlocale-ai"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "eslint-plugin-vue": "^10.4.0",
+    "js-cookie": "^3.0.5",
+    "papaparse": "^5.5.3",
+    "pinia": "^3.0.3",
+    "vue": "^3.5.18",
+    "vue-multiselect": "^3.3.1",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^24.3.0",
+    "@types/papaparse": "^5.3.16",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.6.0",
+    "@vue/tsconfig": "^0.8.1",
+    "cross-env": "^10.0.0",
+    "eslint": "^9.34.0",
+    "prettier": "3.6.2",
+    "typescript": "^5.9.2",
+    "vite": "^7.0.6",
+    "vite-plugin-vue-devtools": "^8.0.0",
+    "vue-tsc": "^3.0.6"
+  }
+}

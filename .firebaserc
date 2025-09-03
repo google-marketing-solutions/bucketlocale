@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "eylong-playground-375014"
+  },
+  "targets": {
+    "bucketlocale-dev": {
+      "hosting": {
+        "app": [
+          "bucketlocale-dev"
+        ]
+      }
+    }
+  }
+}
+

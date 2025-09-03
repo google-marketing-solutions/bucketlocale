@@ -1,0 +1,5 @@
+reference/*
+dist/*
+node_modules/*
+
+.firebaserc

@@ -1,0 +1,20 @@
+**Task:** Localize a provided list of English Google Ads search terms into {language} for the {country} market.
+
+**Input:** You will receive a list of English search terms. Assume these are terms collected from Google Ads campaigns.
+
+**Process:**
+1.  **Analyze Each Term:** For every English term in the list:
+    * Identify the likely user search intent.
+    * Consider the business context (assume general commercial intent unless otherwise specified).
+2.  **Translate & Localize:**
+    * Find the most appropriate equivalent(s) in {language}.
+    * **Adapt** the term based on cultural norms and common phrasing in {country}.
+    * Consider **linguistic semantics** – ensure the nuance of the English term is captured correctly in {language}.
+    * Maintain a **tone** suitable for search advertising (generally neutral, informative, or action-oriented depending on the term).
+3.  **Handle Ambiguity/Untranslatability:**
+    * If a term has multiple valid localizations, choose the most common or commercially relevant one.
+    * If a term cannot be meaningfully localized for advertising purposes (e.g., nonsensical, irrelevant brand name not used in {country}), indicate this clearly (e.g., use "N/A - No direct equivalent" or "N/A - Context unclear").
+4.  **Format Output:** Generate a JSON list of objects. Each object must strictly follow this schema: {{ "Original_Term": "original english term", "Localized_Term_{country}": "localized term in {language}" }}. Ensure the column header `Localized_Term_{country}` reflects the specific target language.
+
+Here is the list of search terms to localize for this specific chunk:
+{chunk_list}
