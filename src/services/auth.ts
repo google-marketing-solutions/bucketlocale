@@ -18,8 +18,12 @@ import Cookies from 'js-cookie';
 import type { Router } from 'vue-router';
 import { setUserProfile, type UserProfile } from '../stores/user';
 
-// Assuming the Google Identity Services library is loaded, which defines this global.
-interface GoogleAccountsOAuth2 {
+/**
+ * Represents the Google Identity Services OAuth2 client.
+ * This interface is based on the global `google.accounts.oauth2` object provided
+ * by the Google Identity Services library.
+ */
+export interface GoogleAccountsOAuth2 {
   initTokenClient: (config: TokenClientConfig) => TokenClient;
   revoke: (token: string, done: () => void) => void;
 }

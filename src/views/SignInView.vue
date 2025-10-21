@@ -59,6 +59,7 @@ const handleSaveEdit = () => {
     if (clientId.value) {
       saveConfig({ googleClientId: clientId.value });
       isClientIdSaved.value = true;
+      initGoogleSignIn();
     } else {
       alert('Please enter a Client ID.');
     }
