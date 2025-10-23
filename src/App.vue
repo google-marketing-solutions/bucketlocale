@@ -4,6 +4,7 @@ import { RouterView, useRoute } from 'vue-router';
 import AppHeader from './components/AppHeader.vue';
 import AppSidebar from './components/AppSidebar.vue';
 import SettingsModal from './components/SettingsModal.vue';
+import ConsentBanner from './components/ConsentBanner.vue';
 
 const route = useRoute();
 const showLayout = computed(() => route.name !== 'signin');
@@ -15,6 +16,17 @@ const openSettingsModal = () => {
 
 const closeSettingsModal = () => {
   isSettingsModalOpen.value = false;
+};
+
+const handleConsent = (consent: boolean) => {
+  const consentMode = {
+    'functionality_storage': consent ? 'granted' : 'denied',
+    'security_storage': consent ? 'granted' : 'denied',
+    'analytics_storage': consent ? 'granted' : 'denied',
+    'personalization_storage': consent ? 'granted' : 'denied',
+  };
+  gtag('consent', 'update', consentMode);
+  localStorage.setItem('consentMode', JSON.stringify(consentMode));
 };
 </script>
 
@@ -31,6 +43,7 @@ const closeSettingsModal = () => {
         </div>
       </div>
       <SettingsModal v-if="isSettingsModalOpen" @close="closeSettingsModal" />
+      <ConsentBanner @consent-given="handleConsent" />
     </template>
     <template v-else>
       <RouterView />
