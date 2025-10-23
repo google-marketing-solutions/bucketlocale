@@ -82,6 +82,7 @@
 import { ref } from 'vue';
 import VueMultiselect from 'vue-multiselect';
 import { geminiApiService } from '../services/gemini';
+import { useKeywordGenerationStore } from '../stores/keywordGeneration';
 import type { KeywordGenerationForm } from '../types/forms';
 
 const emit = defineEmits<{
@@ -92,25 +93,16 @@ const emit = defineEmits<{
 const isLoading = ref<boolean>(false);
 const error = ref<string | null>(null);
 
-const form = ref<KeywordGenerationForm>({
-  companyName: '',
-  verticalName: '',
-  seedKeywordsStr: '',
-  productLandingPage: '',
-  userIntents: [],
-  numKeywords: 100,
-  companyDescription: '',
-  verticalDescription: '',
-  competitionLandingPagesStr: '',
-  negativeKeywordsStr: '',
-});
+const store = useKeywordGenerationStore();
+const form = store.form;
 
 const generateKeywords = async (): Promise<void> => {
   isLoading.value = true;
   error.value = null;
   try {
-    const results = await geminiApiService.generateKeywords(form.value);
+    const results = await geminiApiService.generateKeywords(form);
     emit('generate', results);
+    store.resetForm();
     emit('close');
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : String(err);
