@@ -17,6 +17,20 @@ export interface KeywordMetrics {
   high_top_of_page_bid: string;
 }
 
+/**
+ * Represents a keyword idea from the Google Ads API.
+ */
+export interface KeywordIdea {
+  text: string;
+  keywordIdeaMetrics: {
+    avgMonthlySearches: string;
+    competition: string;
+    competitionIndex: string;
+    lowTopOfPageBidMicros: string;
+    highTopOfPageBidMicros: string;
+  };
+}
+
 interface GoogleAdsApiError {
   error: {
     code: number;
@@ -40,15 +54,10 @@ interface KeywordHistoricalMetricsResult {
  * Service class for interacting with the Google Ads API.
  */
 export class GoogleAdsService {
-  private readonly developerToken: string;
-  private readonly mccId: string;
   private readonly apiVersion: string;
   private readonly apiEndpoint: string;
 
   constructor() {
-    this.developerToken = config.googleAdsDeveloperToken;
-    // Sanitize MCC ID by removing dashes
-    this.mccId = (config.googleAdsMccId || '').replace(/-/g, '');
     this.apiVersion = API_VERSION;
     this.apiEndpoint = `https://googleads.googleapis.com/${this.apiVersion}`;
   }
@@ -59,15 +68,18 @@ export class GoogleAdsService {
       throw new Error('User is not authenticated.');
     }
 
-    if (!this.developerToken || !this.mccId) {
+    const developerToken = config.googleAdsDeveloperToken;
+    const mccId = (config.googleAdsMccId || '').replace(/-/g, '');
+
+    if (!developerToken || !mccId) {
       throw new Error('Google Ads Developer Token and MCC ID must be configured in settings.');
     }
 
     return {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${authToken}`,
-      'developer-token': this.developerToken,
-      'login-customer-id': this.mccId,
+      'developer-token': developerToken,
+      'login-customer-id': mccId,
     };
   }
 
@@ -76,10 +88,12 @@ export class GoogleAdsService {
    * @param keywords An array of keywords to fetch metrics for.
    * @return A promise that resolves to an array of KeywordMetrics.
    */
-  async getKeywordsHistoricalMetrics(
-    keywords: string[],
-  ): Promise<KeywordMetrics[]> {
-    const url = `${this.apiEndpoint}/customers/${this.mccId}:generateKeywordHistoricalMetrics`;
+  async getKeywordsHistoricalMetrics(keywords: string[]): Promise<KeywordMetrics[]> {
+    const customerId = (config.googleAdsMccId || '').replace(/-/g, '');
+    if (!customerId) {
+      throw new Error('Google Ads MCC ID must be configured in settings.');
+    }
+    const url = `${this.apiEndpoint}/customers/${customerId}:generateKeywordHistoricalMetrics`;
     const headers = await this.getHeaders();
 
     const payload = {
@@ -115,4 +129,53 @@ export class GoogleAdsService {
       throw new Error('An unknown error occurred while fetching keyword metrics.');
     }
   }
+
+  async generateKeywordIdeas(
+    seedKeywords: string[],
+    pageUrl?: string,
+    language?: string,
+    geoTargetConstants?: string[],
+  ): Promise<KeywordIdea[]> {
+    const customerId = (config.googleAdsMccId || '').replace(/-/g, '');
+    if (!customerId) {
+      throw new Error('Google Ads MCC ID must be configured in settings.');
+    }
+    const url = `${this.apiEndpoint}/customers/${customerId}:generateKeywordIdeas`;
+    const headers = await this.getHeaders();
+
+    const seed = pageUrl
+      ? { keywordAndUrlSeed: { url: pageUrl, keywords: seedKeywords } }
+      : { keywordSeed: { keywords: seedKeywords } };
+
+    const payload = {
+      language: language || 'languageConstants/1000', // English
+      geoTargetConstants: geoTargetConstants || ['geoTargetConstants/2840'], // United States
+      includeAdultKeywords: false,
+      keywordPlanNetwork: 'GOOGLE_SEARCH',
+      ...seed,
+    };
+
+    const axiosOptions: AxiosRequestConfig = { headers };
+
+    try {
+      const response: AxiosResponse = await axios.post(url, payload, axiosOptions);
+      return response.data.results.filter((idea: KeywordIdea) => idea.keywordIdeaMetrics);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const errorData = error.response?.data as GoogleAdsApiError;
+        if (errorData?.error) {
+          throw new Error(
+            `Google Ads API error: ${errorData.error.message} (Status: ${errorData.error.status})`,
+          );
+        }
+      }
+      throw new Error('An unknown error occurred while generating keyword ideas.');
+    }
+  }
 }
+
+/**
+ * Singleton instance of the GoogleAdsService.
+ * Use this instance to interact with the Google Ads API throughout the application.
+ */
+export const googleAdsService = new GoogleAdsService();

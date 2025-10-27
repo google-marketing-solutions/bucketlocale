@@ -55,13 +55,18 @@ interface BatchRequest {
   };
 }
 
-interface KeywordGenerationFormData {
+/**
+ * Interface for the form used to generate keywords.
+ * It defines the structure of the data collected from the user
+ * to generate relevant keywords based on company and vertical information,
+ * seed keywords, and other parameters.
+ */
+export interface KeywordGenerationFormData {
   userIntents: string[];
   companyName: string;
   verticalName: string;
   seedKeywordsStr: string;
   productLandingPage: string;
-  numKeywords: number;
   companyDescription?: string;
   verticalDescription?: string;
   competitionLandingPagesStr?: string;
@@ -209,13 +214,12 @@ class GeminiApiService {
     const intentsString = formData.userIntents.length
       ? formData.userIntents.join(', ')
       : 'all types';
-    const replacements: { [key: string]: string | number } = {
+    const replacements: { [key: string]: string } = {
       company_name: formData.companyName,
       vertical_name: formData.verticalName,
       seed_keywords_str: formData.seedKeywordsStr,
       product_landing_page: formData.productLandingPage,
       target_intents: intentsString,
-      num_keywords: formData.numKeywords,
       company_description_section: formData.companyDescription
         ? `- Company/Product Description: ${formData.companyDescription}`
         : '',
@@ -231,23 +235,20 @@ class GeminiApiService {
     };
     for (const key in replacements) {
       if (Object.prototype.hasOwnProperty.call(replacements, key)) {
-        prompt = prompt.replace(new RegExp(`{${key}}`, 'g'), replacements[key]);
+        prompt = prompt.replace(new RegExp(`{${key}}`, 'g'), String(replacements[key]));
       }
     }
     return prompt.replace(/\n\s*\n/g, '\n\n').trim();
   }
 
-  async generateKeywords(formData: KeywordGenerationFormData): Promise<string[]> {
+  async generateSeedKeywords(formData: KeywordGenerationFormData): Promise<string[]> {
     const prompt = this.buildKeywordGenerationPrompt(formData);
     const responseSchema: JsonSchema = {
-      type: 'OBJECT',
-      properties: { keywords: { type: 'ARRAY', items: { type: 'STRING' } } },
-      required: ['keywords'],
+      type: 'ARRAY',
+      items: { type: 'STRING' }
     };
-    const result = (await this.generateContent(prompt, responseSchema)) as {
-      keywords: string[];
-    };
-    return result.keywords || [];
+    const result = (await this.generateContent(prompt, responseSchema)) as string[];
+    return result || [];
   }
 
   async listBatches(): Promise<{ batches: Batch[] }> {

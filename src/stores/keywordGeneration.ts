@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { KeywordGenerationForm } from '../types/forms';
+import type { KeywordIdea } from '../services/googleAds';
 
 const DEFAULT_FORM_STATE: KeywordGenerationForm = {
   companyName: '',
@@ -8,11 +9,12 @@ const DEFAULT_FORM_STATE: KeywordGenerationForm = {
   seedKeywordsStr: '',
   productLandingPage: '',
   userIntents: [],
-  numKeywords: 100,
   companyDescription: '',
   verticalDescription: '',
   competitionLandingPagesStr: '',
   negativeKeywordsStr: '',
+  language: 'languageConstants/1000',
+  geoTargetConstants: ['geoTargetConstants/2840'],
 };
 
 
@@ -20,11 +22,28 @@ const DEFAULT_FORM_STATE: KeywordGenerationForm = {
  * Manages the state of the keyword generation form.
  */
 export const useKeywordGenerationStore = defineStore('keywordGeneration', () => {
-  const form = ref<KeywordGenerationForm>({...DEFAULT_FORM_STATE});
+  const form = ref<KeywordGenerationForm>({ ...DEFAULT_FORM_STATE });
+  const generatedKeywords = ref<KeywordIdea[]>([]);
+  const hasGeneratedKeywords = computed(() => generatedKeywords.value.length > 0);
 
-  function resetForm() {
-    form.value = {...DEFAULT_FORM_STATE};
+  function setGeneratedKeywords(keywords: KeywordIdea[]) {
+    generatedKeywords.value = keywords;
   }
 
-  return { form, resetForm };
+  function clearKeywords() {
+    generatedKeywords.value = [];
+  }
+
+  function resetForm() {
+    form.value = { ...DEFAULT_FORM_STATE };
+  }
+
+  return {
+    form,
+    generatedKeywords,
+    hasGeneratedKeywords,
+    setGeneratedKeywords,
+    clearKeywords,
+    resetForm,
+  };
 });

@@ -1,6 +1,10 @@
 <template>
   <aside class="app-sidebar">
     <nav class="main-nav">
+      <RouterLink to="/generate" class="nav-link">
+        <i class="material-icons">auto_awesome</i>
+        <span>Generate</span>
+      </RouterLink>
       <RouterLink to="/localize" class="nav-link">
         <i class="material-icons">location_on</i>
         <span>Localize</span>

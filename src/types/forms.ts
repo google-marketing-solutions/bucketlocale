@@ -7,12 +7,13 @@
 export interface KeywordGenerationForm {
   companyName: string;
   verticalName: string;
-  seedKeywordsStr: string;
-  productLandingPage: string;
-  userIntents: string[];
-  numKeywords: number;
   companyDescription: string;
   verticalDescription: string;
+  seedKeywordsStr: string;
+  productLandingPage: string;
   competitionLandingPagesStr: string;
+  userIntents: string[];
   negativeKeywordsStr: string;
+  language: string;
+  geoTargetConstants: string[];
 }

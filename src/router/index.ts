@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import LocalizeView from '../views/LocalizeView.vue';
+import GenerateView from '../views/GenerateView.vue';
 import SignInView from '../views/SignInView.vue';
 
 const routes: RouteRecordRaw[] = [
@@ -17,6 +18,12 @@ const routes: RouteRecordRaw[] = [
     path: '/localize',
     name: 'localize',
     component: LocalizeView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/generate',
+    name: 'generate',
+    component: GenerateView,
     meta: { requiresAuth: true },
   },
   {

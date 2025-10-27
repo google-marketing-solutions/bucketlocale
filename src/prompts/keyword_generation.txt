@@ -10,14 +10,13 @@ Campaign Details:
 - Product Landing Page (analyze for keywords): {product_landing_page}
 {competition_section}
 - Target User Intents: {target_intents}
-- Number of Keywords to Generate: {num_keywords}
 {negative_keywords_section}
 
 Output Requirements:
-- Provide a list of exactly {num_keywords} keywords.
+- Provide a list of exactly 10 keywords.
 - Keywords should cover the specified user intent types: {target_intents}. If no specific intents are provided, cover a mix (informational, navigational, transactional, commercial).
 - Include a mix of short-tail and long-tail keywords.
 - Ensure keywords are relevant to the provided company/product, vertical, and landing page.
 - Consider keywords that competitors might be targeting.
 - Strictly avoid generating any keywords that contain the specified negative keywords or phrases.
-- Format the output as a JSON object with a single key "keywords" which contains an array of the generated keyword strings.
+- Format the output as a JSON array of strings.

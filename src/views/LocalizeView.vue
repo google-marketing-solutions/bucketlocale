@@ -7,9 +7,6 @@
       <div v-if="!keywords.length" class="upload-section">
         <div class="button-group">
           <button @click="triggerFileUpload" class="upload-btn">Upload CSV</button>
-          <button @click="isGenerateModalOpen = true" class="generate-btn">
-            Generate Keywords
-          </button>
         </div>
         <input
           type="file"
@@ -106,11 +103,6 @@
       </div>
     </div>
   </div>
-  <GenerateKeywordsModal
-    v-if="isGenerateModalOpen"
-    @close="isGenerateModalOpen = false"
-    @generate="handleGeneratedKeywords"
-  />
 </template>
 
 <script setup lang="ts">
@@ -120,7 +112,6 @@ import { useLocales } from '../stores/locales';
 import { startBatchLocalization } from '../services/localization';
 import { getMetricForecast } from '../services/forecast';
 import type { KeywordMetrics } from '../services/googleAds';
-import GenerateKeywordsModal from '../components/GenerateKeywordsModal.vue';
 import type { Locale } from '../stores/locales';
 import { config } from '../stores/config';
 
@@ -129,7 +120,6 @@ const fileName = ref<string>('');
 const keywords = ref<string[]>([]);
 const keywordCount = ref<number>(0);
 const selectedLocales = ref<Locale[]>([]);
-const isGenerateModalOpen = ref<boolean>(false);
 const isUploading = ref<boolean>(false);
 const uploadError = ref<string | null>(null);
 const jobStarted = ref<boolean>(false);
@@ -162,17 +152,14 @@ const handleFileUpload = (event: Event): void => {
   const reader = new FileReader();
   reader.onload = (e) => {
     const text = e.target?.result as string;
-    const lines = text.split(/\r\n|\n/).filter((line) => line.trim() !== '');
+    const lines = text
+      .split(/\r\n|\n/)
+      .filter((line) => line.trim() !== '')
+      .map((line) => line.split(',')[0].trim());
     keywords.value = lines;
     keywordCount.value = lines.length;
   };
   reader.readAsText(file);
-};
-
-const handleGeneratedKeywords = (generatedKeywords: string[]): void => {
-  keywords.value = generatedKeywords;
-  keywordCount.value = generatedKeywords.length;
-  fileName.value = 'Generated Keywords';
 };
 
 const localizeKeywords = async (): Promise<void> => {
