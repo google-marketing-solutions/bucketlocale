@@ -17,6 +17,9 @@
       <button @click="activeTab = 'validation'" :class="{ active: activeTab === 'validation' }">
         Validation Jobs
       </button>
+      <button @click="activeTab = 'classification'" :class="{ active: activeTab === 'classification' }">
+        Classification Jobs
+      </button>
     </div>
 
     <div class="card">
@@ -104,9 +107,13 @@ const filteredJobs = computed(() => {
     return jobs.value.filter((job) =>
       job.metadata?.displayName?.toLowerCase().includes('localize'),
     );
-  } else {
+  } else if (activeTab.value === 'validation') {
     return jobs.value.filter((job) =>
       job.metadata?.displayName?.toLowerCase().includes('validate'),
+    );
+  } else {
+    return jobs.value.filter((job) =>
+      job.metadata?.displayName?.toLowerCase().includes('classify'),
     );
   }
 });
@@ -192,8 +199,9 @@ async function getJobCsvContent(job: Job): Promise<string> {
 
   if (detailedJob.response?.inlinedResponses) {
     const responses = detailedJob.response.inlinedResponses.inlinedResponses;
-    const isValidationJob = job.metadata?.displayName?.toLowerCase().includes('validate');
-    csvContent = mergeBatchJobResults(responses, isValidationJob);
+    const isValidationJob = !!job.metadata?.displayName?.toLowerCase().includes('validate');
+    const isClassificationJob = !!job.metadata?.displayName?.toLowerCase().includes('classify');
+    csvContent = mergeBatchJobResults(responses, isValidationJob, isClassificationJob);
   } else if (detailedJob.response?.responsesFile) {
     csvContent = await geminiApiService.downloadBatchResults(detailedJob.response.responsesFile);
   } else {
@@ -227,6 +235,7 @@ async function downloadResults(job: Job) {
 }
 
 async function openInSheets(job: Job) {
+  if (!job.name) return;
   sheetsLoading[job.name] = true;
   try {
     const csvContent = await getJobCsvContent(job);

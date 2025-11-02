@@ -1,0 +1,10 @@
+Your task is to analyze the following keyword list and consolidate them into the smallest possible set of high-level, distinct categories. The goal is to find the most logical thematic groupings.
+
+For each category, provide:
+
+Category Name: A concise and intuitive name.
+
+Description: A brief, one-sentence explanation of the theme this category covers.
+
+The keywords are:
+{keyword_list}

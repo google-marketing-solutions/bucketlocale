@@ -29,7 +29,12 @@ interface Content {
   parts: ContentPart[];
 }
 
-interface JsonSchema {
+/**
+ * Represents a JSON Schema object used for defining the structure of
+ * expected JSON responses from the Gemini API, particularly when
+ * `response_mime_type` is set to 'application/json'.
+ */
+export interface JsonSchema {
   type: string;
   properties?: { [key: string]: JsonSchema };
   items?: JsonSchema;
@@ -42,7 +47,12 @@ interface GenerationConfig {
   response_schema?: JsonSchema;
 }
 
-interface BatchRequest {
+/**
+ * Represents a single request within a batch generation operation.
+ * It includes the content to be sent to the model, the generation configuration,
+ * and metadata to identify the request within the batch.
+ */
+export interface BatchRequest {
   request: {
     contents: Array<{ parts: Array<{ text: string }> }>;
     generation_config: {
@@ -73,7 +83,14 @@ export interface KeywordGenerationFormData {
   negativeKeywordsStr?: string;
 }
 
-interface Batch {
+
+
+/**
+ * Represents a Batch object returned by the Gemini API.
+ * This interface defines the structure for managing asynchronous operations
+ * like `batchGenerateContent`, including its state, configuration, and results.
+ */
+export interface Batch {
   name: string;
   displayName: string;
   state: string; // e.g., 'COMPLETED', 'RUNNING'
@@ -87,7 +104,36 @@ interface Batch {
   outputConfig: {
     uri: string;
   };
+  response?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    inlinedResponses?: { inlinedResponses: any[] };
+    responsesFile?: string;
+  };
   // Add other batch properties as needed
+}
+
+/**
+ * Interface representing the metadata associated with a long-running operation
+ * or job returned by the Gemini API, such as for batch operations.
+ */
+export interface JobMetadata {
+  createTime?: string;
+  displayName?: string;
+  state?: string;
+}
+
+/**
+ * Represents a long-running operation or "Job" returned by the Gemini API,
+ * typically from calls like `batchGenerateContent`.
+ * It contains the status of the operation, potential metadata,
+ * and either a response (e.g., a Batch) or an error.
+ */
+export interface Job {
+  name: string;
+  done: boolean;
+  metadata?: JobMetadata;
+  error?: unknown;
+  response?: Batch;
 }
 
 interface ContentPart {
@@ -153,6 +199,7 @@ class GeminiApiService {
           message = errorDetails.error?.message || message;
         } catch (_e) {
           // Use responseText if it's not JSON
+          console.log(_e);
           message = responseText || message;
         }
         throw new Error(message);
@@ -251,7 +298,7 @@ class GeminiApiService {
     return result || [];
   }
 
-  async listBatches(): Promise<{ batches: Batch[] }> {
+  async listBatches(): Promise<{ operations: Job[] }> {
     return this.makeRequest('batches?pageSize=1000', 'GET');
   }
 

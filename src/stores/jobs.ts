@@ -1,19 +1,8 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import { geminiApiService, type Batch } from '../services/gemini';
+import { geminiApiService, type Job } from '../services/gemini';
 
-interface JobMetadata {
-  createTime?: string;
-  // Add other metadata properties if needed
-}
-
-interface Job {
-  name: string;
-  done: boolean;
-  metadata?: JobMetadata;
-  error?: unknown;
-  response?: Batch;
-}
+export type { Job };
 
 /**
  * @description Store for managing jobs.

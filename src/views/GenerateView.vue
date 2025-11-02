@@ -135,7 +135,7 @@ import { geminiApiService } from '../services/gemini';
 import { GoogleAdsService } from '../services/googleAds';
 import { useKeywordGenerationStore } from '../stores/keywordGeneration';
 import type { KeywordIdea } from '../services/googleAds';
-import { config } from '../stores/config';
+
 import {
   GOOGLE_ADS_LANGUAGE_MAP,
   GOOGLE_ADS_GEO_TARGET_MAP,
