@@ -116,7 +116,7 @@ export function initGoogleTokenClient(router: Router, clientId: string): void {
         } else {
           fetchUserProfile(tokenResponse.access_token)
             .then(() => {
-              router.push({ name: 'localize' });
+              router.push({ name: 'generate' });
             })
             .catch((error) => {
               console.error('Failed to process sign-in:', error);
