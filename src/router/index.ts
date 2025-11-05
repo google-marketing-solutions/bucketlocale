@@ -12,7 +12,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/',
-    redirect: '/localize',
+    redirect: '/generate',
   },
   {
     path: '/localize',
