@@ -44,6 +44,9 @@ const emit = defineEmits<{
 const localConfig = ref<Partial<Config>>({ ...config });
 
 const saveSettings = (): void => {
+  if (localConfig.value.googleAdsMccId) {
+    localConfig.value.googleAdsMccId = localConfig.value.googleAdsMccId.trim();
+  }
   saveConfig(localConfig.value);
   emit('close');
 };

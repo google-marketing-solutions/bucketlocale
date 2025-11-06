@@ -175,7 +175,7 @@ const downloadKeywords = (): void => {
   csvContent += 'Keyword,Avg. Monthly Searches,Competition,Low Top of Page Bid,High Top of Page Bid\n';
   generatedKeywords.value.forEach((idea: KeywordIdea) => {
     const row = [
-      `"${idea.text}"`,
+      idea.text,
       idea.keywordIdeaMetrics.avgMonthlySearches,
       idea.keywordIdeaMetrics.competition,
       idea.keywordIdeaMetrics.lowTopOfPageBidMicros,

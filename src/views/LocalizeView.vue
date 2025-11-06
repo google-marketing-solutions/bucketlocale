@@ -56,7 +56,7 @@
             <button
               @click="getMetricsForecast"
               class="get-metrics-btn"
-              :disabled="isForecastDisabled || forecastData"
+              :disabled="isForecastDisabled || !!forecastData"
             >
               Get Historical Metrics
             </button>
@@ -156,8 +156,8 @@ const handleFileUpload = (event: Event): void => {
       .split(/\r\n|\n/)
       .filter((line) => line.trim() !== '')
       .map((line) => line.split(',')[0].trim());
-    keywords.value = lines;
-    keywordCount.value = lines.length;
+    keywords.value = lines.slice(1);
+    keywordCount.value = lines.length - 1;
   };
   reader.readAsText(file);
 };

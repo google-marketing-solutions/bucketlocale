@@ -161,8 +161,10 @@ export async function startBatchClassification(
 export async function generateClassificationSuggestions(
   keywords: string[]
 ): Promise<Classification[]> {
+  const shuffled = [...keywords].sort(() => 0.5 - Math.random());
+  const selectedKeywords = shuffled.slice(0, 100);
 
-  const prompt = buildPrompt(classGenerationPrompt, { keyword_list: keywords.slice(0, 100).join(', ') });
+  const prompt = buildPrompt(classGenerationPrompt, { keyword_list: selectedKeywords.join(', ') });
 
   const responseSchema: JsonSchema = {
     type: 'ARRAY',

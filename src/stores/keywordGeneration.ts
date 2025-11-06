@@ -30,7 +30,7 @@ const DEFAULT_FORM_STATE: KeywordGenerationForm = {
   competitionLandingPagesStr: '',
   negativeKeywordsStr: '',
   language: 'languageConstants/1000',
-  geoTargetConstants: ['geoTargetConstants/2840'],
+  geoTargetConstants: [],
 };
 
 
