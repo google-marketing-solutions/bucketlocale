@@ -88,7 +88,7 @@
       <p class="success-message">
         To view the job progress, go to the <router-link to="/jobs">Jobs</router-link> tab.
       </p>
-      <button @click="startNewValidation" class="generate-btn">Start New Validation</button>
+      <button @click="startNewValidation" class="validate-btn">Start New Validation</button>
     </div>
   </div>
 </template>
@@ -390,7 +390,7 @@ const startNewValidation = (): void => {
   margin-bottom: 2rem;
 }
 
-.generate-btn {
+.validate-btn {
   padding: 1rem 2rem;
   border: none;
   border-radius: 8px;

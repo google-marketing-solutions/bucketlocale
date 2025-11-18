@@ -34,7 +34,7 @@ export interface Config {
 
 // Default configuration
 const defaultConfig: Config = {
-  model: 'gemini-1.5-flash',
+  model: 'gemini-2.5-flash',
   geminiApiKey: '',
   googleClientId: '',
   googleAdsDeveloperToken: '',
@@ -56,7 +56,12 @@ export const config: Config = reactive({ ...defaultConfig });
 export function loadConfig(): void {
   const storedConfig = localStorage.getItem(CONFIG_STORAGE_KEY);
   if (storedConfig) {
-    Object.assign(config, JSON.parse(storedConfig));
+    const parsedConfig = JSON.parse(storedConfig);
+    // If the stored model is the old default, update it to the new default.
+    if (parsedConfig.model === 'gemini-1.5-flash') {
+      parsedConfig.model = defaultConfig.model;
+    }
+    Object.assign(config, parsedConfig);
   } else {
     // Initialize with defaults if nothing is stored
     Object.assign(config, defaultConfig);

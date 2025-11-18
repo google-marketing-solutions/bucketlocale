@@ -85,7 +85,7 @@
           <textarea id="negativeKeywords" v-model="form.negativeKeywordsStr"></textarea>
         </div>
         <div class="form-actions">
-          <button type="submit" class="btn-primary" :disabled="isLoading">
+          <button type="submit" class="btn-primary generate-kws-btn" :disabled="isLoading">
             {{ isLoading ? 'Generating...' : 'Generate Keywords' }}
           </button>
         </div>
