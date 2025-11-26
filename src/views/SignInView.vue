@@ -29,6 +29,13 @@
         />
         Sign in with Google
       </button>
+
+      <div class="onboarding-section">
+        <RouterLink to="/onboarding" class="onboarding-btn">
+          <i class="material-icons">rocket_launch</i>
+          New here? Start Setup Guide
+        </RouterLink>
+      </div>
     </div>
   </div>
 </template>
@@ -220,5 +227,36 @@ input[type='text']:disabled {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.onboarding-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.onboarding-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 198, 255, 0.2);
+}
+
+.onboarding-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 198, 255, 0.3);
+}
+
+.onboarding-btn i {
+  font-size: 1.2rem;
 }
 </style>

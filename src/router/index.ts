@@ -60,6 +60,12 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../views/ClassifyView.vue'),
     meta: { requiresAuth: true },
   },
+  {
+    path: '/onboarding',
+    name: 'onboarding',
+    component: () => import('../views/OnboardingView.vue'),
+    meta: { requiresAuth: false },
+  },
 ];
 
 const router = createRouter({

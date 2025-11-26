@@ -7,7 +7,10 @@ import SettingsModal from './components/SettingsModal.vue';
 import ConsentBanner from './components/ConsentBanner.vue';
 
 const route = useRoute();
-const showLayout = computed(() => route.name !== 'signin');
+const showLayout = computed(() => {
+  if (route.name === 'signin' || route.name === 'onboarding') return false;
+  return true;
+});
 const isSettingsModalOpen = ref(false);
 
 const openSettingsModal = () => {
