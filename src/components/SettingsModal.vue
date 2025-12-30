@@ -12,7 +12,7 @@
           <input type="password" id="geminiApiKey" v-model="localConfig.geminiApiKey" />
         </div>
         <div class="form-group">
-          <label for="googleAdsDeveloperToken">Google Ads Developer Token (Optional)</label>
+          <label for="googleAdsDeveloperToken">Google Ads Developer Token</label>
           <input
             type="password"
             id="googleAdsDeveloperToken"
@@ -20,7 +20,7 @@
           />
         </div>
         <div class="form-group">
-          <label for="googleAdsMccId">Google Ads MCC ID (Optional)</label>
+          <label for="googleAdsMccId">Google Ads MCC ID</label>
           <input type="text" id="googleAdsMccId" v-model="localConfig.googleAdsMccId" />
         </div>
         <div class="modal-actions">

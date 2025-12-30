@@ -17,14 +17,13 @@ Generate high-quality keyword ideas based on your product and vertical.
 ### 2. Classify
 Organize your keywords into meaningful categories at scale.
 -   **Batch Processing**: Upload a CSV of keywords and define custom classification categories (e.g., "Intent", "Product Feature").
--   **AI Classification**: Uses **Vertex AI** to classify thousands of keywords into your defined categories simultaneously.
+-   **AI Classification**: Uses **Gemini** to classify thousands of keywords into your defined categories simultaneously.
 -   **Smart Suggestions**: Can automatically generate classification suggestions based on a sample of your keywords.
 
 ### 3. Localize
 Adapt your keywords for different markets and languages.
 -   **Multi-Region**: Select multiple target countries and languages.
 -   **Contextual Translation**: Uses **Gemini** to localize keywords while preserving their original intent and marketing nuance.
--   **Forecasting**: Retrieve historical metrics and forecasts for your localized keywords to estimate performance in new markets.
 
 ## Prerequisites
 
@@ -42,7 +41,7 @@ Enable the following APIs in your GCP project:
 
 ### 3. OAuth Client ID
 -   Create an **OAuth 2.0 Client ID** of type **Web application**.
--   Set it to **Internal** (if applicable to your use case).
+-   Set it to **Internal** .
 -   **Authorized JavaScript origins**: `window.location.origin` (e.g., `https://bucketlocale-ai.web.app`).
 -   **Authorized redirect URIs**: `window.location.origin`.
 -   **Important**: You will need to enter this **Client ID** on the Sign In page of the application.
@@ -51,8 +50,8 @@ Enable the following APIs in your GCP project:
 -   Obtain a **Gemini API Key** from [Google AI Studio](https://aistudio.google.com/app/apikey).
 -   This key is required for the generation features.
 
-### 5. (Optional) Google Ads Configuration
-To use the **Generate** and **Localize** features (specifically for metrics), you need:
+### 5. Google Ads Configuration
+To use the **Generate** feature, you need:
 -   **Google Ads MCC ID** (Manager Account ID).
 -   **Google Ads Developer Token**.
 -   These can be entered in the application settings.
