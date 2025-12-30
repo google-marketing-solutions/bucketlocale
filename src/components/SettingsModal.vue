@@ -5,7 +5,11 @@
       <form @submit.prevent="saveSettings">
         <div class="form-group">
           <label for="model">Model</label>
-          <input type="text" id="model" v-model="localConfig.model" />
+          <select id="model" v-model="localConfig.model">
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+            <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</option>
+            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="geminiApiKey">Gemini API Key</label>
@@ -93,7 +97,8 @@ const saveSettings = (): void => {
   color: var(--text-color-muted);
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 0.8rem 1rem;
   border: 1px solid var(--border-color);
