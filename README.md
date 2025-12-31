@@ -38,6 +38,7 @@ Enable the following APIs in your GCP project:
 -   **Vertex AI API**: For generation and classification.
 -   **Google Ads API**: For keyword metrics and forecasting.
 -   **Google Sheets API**: For exporting results.
+-   **Secret Manager API**: For securely storing API keys and credentials.
 
 ### 3. OAuth Client ID
 -   Create an **OAuth 2.0 Client ID** of type **Web application**.

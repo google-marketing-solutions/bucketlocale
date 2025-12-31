@@ -18,6 +18,7 @@ import axios from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { config } from '../stores/config';
 import { getAuthToken } from './auth';
+import { secretManagerService } from './secretManager';
 
 const API_VERSION = 'v21';
 
@@ -84,7 +85,18 @@ export class GoogleAdsService {
       throw new Error('User is not authenticated.');
     }
 
-    const developerToken = config.googleAdsDeveloperToken;
+    let developerToken = config.googleAdsDeveloperToken;
+    if (config.useSecretManager) {
+      if (!config.googleClientId) {
+        throw new Error('Google Client ID is missing. Cannot derive Project Number for Secret Manager.');
+      }
+      const projectNumber = config.googleClientId.split('-')[0];
+      if (!projectNumber) {
+        throw new Error('Invalid Google Client ID format. Cannot derive Project Number.');
+      }
+      const resourceId = `projects/${projectNumber}/secrets/google_ads_developer_token/versions/latest`;
+      developerToken = await secretManagerService.getSecret(resourceId);
+    }
     const mccId = (config.googleAdsMccId || '').replace(/-/g, '');
 
     if (!developerToken || !mccId) {

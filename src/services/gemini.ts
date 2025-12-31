@@ -16,6 +16,7 @@
 
 import keywordGenerationPrompt from '../prompts/keyword_generation.txt?raw';
 import { config } from '../stores/config';
+import { secretManagerService } from './secretManager';
 
 const GEMINI_API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
 
@@ -161,8 +162,21 @@ interface GenerateContentResponse {
 }
 
 class GeminiApiService {
-  private getApiKey(): string {
-    const { geminiApiKey } = config;
+  private async getApiKey(): Promise<string> {
+    const { geminiApiKey, useSecretManager, googleClientId } = config;
+
+    if (useSecretManager) {
+      if (!googleClientId) {
+        throw new Error('Google Client ID is missing. Cannot derive Project Number for Secret Manager.');
+      }
+      const projectNumber = googleClientId.split('-')[0];
+      if (!projectNumber) {
+        throw new Error('Invalid Google Client ID format. Cannot derive Project Number.');
+      }
+      const resourceId = `projects/${projectNumber}/secrets/gemini_api_key/versions/latest`;
+      return await secretManagerService.getSecret(resourceId);
+    }
+
     if (!geminiApiKey || !geminiApiKey.trim()) {
       throw new Error('Gemini API key is not configured in settings.');
     }
@@ -174,7 +188,8 @@ class GeminiApiService {
     method: 'POST' | 'GET' | 'DELETE',
     body?: unknown,
   ): Promise<T> {
-    const apiKey = this.getApiKey();
+
+    const apiKey = await this.getApiKey();
     const url = `${GEMINI_API_BASE_URL}/${endpoint}`;
 
     const headers: HeadersInit = {
@@ -308,7 +323,7 @@ class GeminiApiService {
   }
 
   async downloadBatchResults(fileName: string): Promise<string> {
-    const apiKey = this.getApiKey();
+    const apiKey = await this.getApiKey();
     const url = `https://generativelanguage.googleapis.com/download/v1beta/${fileName}:download?alt=media`;
 
     const response = await fetch(url, {

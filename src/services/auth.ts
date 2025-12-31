@@ -102,7 +102,7 @@ export function initGoogleTokenClient(router: Router, clientId: string): void {
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: clientId,
     scope:
-      'openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/devstorage.read_write https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/adwords',
+      'openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/devstorage.read_write https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/adwords https://www.googleapis.com/auth/cloud-platform',
     callback: (tokenResponse: GoogleTokenResponse) => {
       if (tokenResponse && tokenResponse.access_token) {
         const expiresInSeconds = tokenResponse.expires_in;

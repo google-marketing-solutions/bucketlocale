@@ -33,7 +33,7 @@
         <div class="timeline-marker">2</div>
         <div class="timeline-content">
           <h2>Enable Required APIs</h2>
-          <p>Enable the <strong>Vertex AI API</strong>, the <strong>Google Ads API</strong>, and the <strong>Google Sheets API</strong> for your project.</p>
+          <p>Enable the <strong>Vertex AI API</strong>, the <strong>Google Ads API</strong>, the <strong>Google Sheets API</strong>, and the <strong>Secret Manager API</strong> for your project.</p>
           <div class="links">
             <a href="https://console.cloud.google.com/marketplace/product/google/aiplatform.googleapis.com" target="_blank" class="action-link">
               <i class="material-icons">psychology</i> Vertex AI API
@@ -43,6 +43,9 @@
             </a>
             <a href="https://console.cloud.google.com/marketplace/product/google/googleads.googleapis.com" target="_blank" class="action-link">
               <i class="material-icons">campaign</i> Ads API
+            </a>
+            <a href="https://console.cloud.google.com/marketplace/product/google/secretmanager.googleapis.com" target="_blank" class="action-link">
+              <i class="material-icons">lock</i> Secret Manager API
             </a>
           </div>
         </div>
@@ -104,6 +107,12 @@
             </li>
             <li>
               <strong>API Key:</strong> Enter your <strong>Gemini API Key</strong>.
+            </li>
+            <li class="secret-manager-step">
+              <strong>Secret Manager (Optional):</strong> Check the box if you are reading secrets that are saved in GCP Secret Manager instead of locally on your browser.
+              <p class="step-detail">
+                The keys should be named <code>gemini_api_key</code> and <code>google_ads_developer_token</code>, and saved in the same project as the one associated with the Google Client ID. You need to be granted the role <strong>Secret Manager Secret Accessor</strong> in the IAM.
+              </p>
             </li>
             <li>
               <strong>Optional:</strong> Add your <strong>Google Ads MCC ID</strong> and <strong>Developer Token</strong> if you plan to use generation features.
@@ -370,5 +379,20 @@ onMounted(() => {
   .timeline-content {
     padding: 1rem;
   }
+}
+
+.step-detail {
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+  color: var(--text-color-muted);
+  line-height: 1.5;
+}
+
+.step-detail code {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  color: #a5d6ff;
+  font-family: monospace;
 }
 </style>

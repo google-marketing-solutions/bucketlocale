@@ -30,6 +30,7 @@ export interface Config {
   googleClientId: string;
   googleAdsDeveloperToken: string;
   googleAdsMccId: string;
+  useSecretManager: boolean;
 }
 
 // Default configuration
@@ -39,6 +40,7 @@ const defaultConfig: Config = {
   googleClientId: '',
   googleAdsDeveloperToken: '',
   googleAdsMccId: '',
+  useSecretManager: false,
 };
 
 /**

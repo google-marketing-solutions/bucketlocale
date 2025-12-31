@@ -3,6 +3,17 @@
     <div class="modal-content">
       <h2 class="modal-title">Settings</h2>
       <form @submit.prevent="saveSettings">
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="useSecretManager" v-model="localConfig.useSecretManager" />
+          <label for="useSecretManager">Read keys from Secret Manager</label>
+          <div class="tooltip-wrapper">
+            <i class="material-icons info-icon">help_outline</i>
+            <div class="tooltip-content">
+              Check this box if you are reading secrets that are saved in GCP Secret Manager. The keys should be named 'gemini_api_key' and 'google_ads_developer_token', and saved in the same project as the one associated with the Google Client ID, where you need to be granted the role 'Secret Manager Secret Accessor' in the IAM.
+            </div>
+          </div>
+        </div>
+
         <div class="form-group">
           <label for="model">Model</label>
           <select id="model" v-model="localConfig.model">
@@ -12,21 +23,37 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="geminiApiKey">Gemini API Key</label>
-          <input type="password" id="geminiApiKey" v-model="localConfig.geminiApiKey" />
-        </div>
-        <div class="form-group">
-          <label for="googleAdsDeveloperToken">Google Ads Developer Token</label>
-          <input
-            type="password"
-            id="googleAdsDeveloperToken"
-            v-model="localConfig.googleAdsDeveloperToken"
-          />
-        </div>
-        <div class="form-group">
           <label for="googleAdsMccId">Google Ads MCC ID</label>
           <input type="text" id="googleAdsMccId" v-model="localConfig.googleAdsMccId" />
         </div>
+        <template v-if="!localConfig.useSecretManager">
+          <div class="form-group">
+            <label for="geminiApiKey">Gemini API Key</label>
+            <input type="password" id="geminiApiKey" v-model="localConfig.geminiApiKey" />
+          </div>
+          <div class="form-group">
+            <label for="googleAdsDeveloperToken">Google Ads Developer Token</label>
+            <input
+              type="password"
+              id="googleAdsDeveloperToken"
+              v-model="localConfig.googleAdsDeveloperToken"
+            />
+          </div>
+        </template>
+        <template v-else>
+          <div class="info-box">
+            <i class="material-icons">info</i>
+            <p>
+              We will automatically look for secrets in the Google Cloud Project associated with your Client ID.
+              <br /><br />
+              Ensure the following secrets exist in Secret Manager:
+              <br />
+              - <strong>gemini_api_key</strong>
+              <br />
+              - <strong>google_ads_developer_token</strong>
+            </p>
+          </div>
+        </template>
         <div class="modal-actions">
           <button type="button" class="btn-secondary" @click="$emit('close')">Cancel</button>
           <button type="submit" class="btn-primary">Save</button>
@@ -139,5 +166,104 @@ const saveSettings = (): void => {
 .btn-secondary:hover {
   background-color: var(--border-color);
   color: var(--text-color);
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox-group input {
+  width: auto;
+  margin: 0;
+}
+
+.checkbox-group label {
+  margin: 0;
+  cursor: pointer;
+}
+
+
+
+.info-icon {
+  font-size: 1.1rem;
+  color: var(--text-color-muted);
+  cursor: help;
+  transition: color 0.2s ease;
+}
+
+.info-icon:hover {
+  color: var(--primary-color);
+}
+
+.tooltip-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.tooltip-content {
+  visibility: hidden;
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  text-align: center;
+  padding: 0.8rem;
+  border-radius: 8px;
+  position: absolute;
+  z-index: 10;
+  bottom: 135%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  font-size: 0.85rem;
+  pointer-events: none;
+  line-height: 1.4;
+}
+
+.tooltip-content::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--surface-color) transparent transparent transparent;
+}
+
+.tooltip-wrapper:hover .tooltip-content {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(-5px);
+}
+
+.info-box {
+  background-color: rgba(0, 198, 255, 0.1);
+  border: 1px solid rgba(0, 198, 255, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.info-box i {
+  color: var(--primary-color);
+  font-size: 1.4rem;
+  margin-top: 0.1rem;
+}
+
+.info-box strong {
+  color: var(--primary-color);
+  font-family: monospace;
 }
 </style>
