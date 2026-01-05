@@ -96,5 +96,9 @@
   { "country": "Honduras", "language": "Spanish" },
   { "country": "Uganda", "language": "Swahili" },
   { "country": "Iceland", "language": "Icelandic" },
-  { "country": "Senegal", "language": "French" }
+  { "country": "Senegal", "language": "French"},
+  { "country": "Canada", "language": "English"},
+  { "country": "Australia", "language": "English"},
+  { "country": "United Kingdom", "language": "English"},
+  { "country": "United States", "language": "English"}
 ]
