@@ -59,7 +59,7 @@ function buildPrompt(chunk: string[], locale: { language: string; country: strin
   for (const key in replacements) {
     if (Object.prototype.hasOwnProperty.call(replacements, key)) {
       const regex = new RegExp(`{${key}}`, 'g');
-      prompt = prompt.replace(regex, replacements[key]);
+      prompt = prompt.replace(regex, replacements[key as keyof typeof replacements]);
     }
   }
   return prompt;
@@ -69,21 +69,23 @@ function buildPrompt(chunk: string[], locale: { language: string; country: strin
  * Generates the inline requests for the batch Gemini API call.
  * @param keywords The full list of keywords to localize.
  * @param locales The list of target locales.
- * @param responseSchema The JSON schema for the expected response.
  * @return An array of request objects for the batch API.
  */
-function generateInlineRequests(keywords: string[], locales: Locale[], responseSchema: JsonSchema): BatchRequest[] {
+function generateInlineRequests(keywords: string[], locales: Locale[]): BatchRequest[] {
   const requests: BatchRequest[] = [];
   const keywordChunks = chunkArray(keywords, 200);
 
   locales.forEach((locale) => {
+    // Generate the specific schema for this locale's country
+    const responseSchema = createResponseSchema(locale.country);
+
     keywordChunks.forEach((chunk, index) => {
       const prompt = buildPrompt(chunk, { language: locale.language, country: locale.country });
       const request = {
         request: {
           contents: [{ parts: [{ text: prompt }] }],
           generation_config: {
-            response_mime_type: 'application/json',
+            response_mime_type: 'application/json' as const,
             response_schema: responseSchema,
           },
         },
@@ -127,10 +129,8 @@ export async function startBatchLocalization(keywords: string[], locales: Locale
   if (!locales.length) {
     throw new Error('No locales provided for localization.');
   }
-  // The schema is dependent on the country, so we assume all locales have the same country for a single batch,
-  // or we handle multiple schemas if needed. For simplicity, using the first locale's country.
-  const responseSchema = createResponseSchema(locales[0].country);
-  const requests = generateInlineRequests(keywords, locales, responseSchema);
+
+  const requests = generateInlineRequests(keywords, locales);
 
   const numberOfKeywords = keywords.length;
   const countries = locales.map((l) => l.country).join('-');
