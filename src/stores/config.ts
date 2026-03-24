@@ -35,7 +35,7 @@ export interface Config {
 
 // Default configuration
 const defaultConfig: Config = {
-  model: 'gemini-2.5-flash',
+  model: 'gemini-3.1-flash-lite-preview',
   geminiApiKey: '',
   googleClientId: '',
   googleAdsDeveloperToken: '',
@@ -60,7 +60,7 @@ export function loadConfig(): void {
   if (storedConfig) {
     const parsedConfig = JSON.parse(storedConfig);
     // If the stored model is the old default, update it to the new default.
-    if (parsedConfig.model === 'gemini-1.5-flash') {
+    if (parsedConfig.model === 'gemini-1.5-flash' || parsedConfig.model === 'gemini-2.5-flash') {
       parsedConfig.model = defaultConfig.model;
     }
     Object.assign(config, parsedConfig);
